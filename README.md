@@ -1,36 +1,34 @@
-Setup Needed:
+# QNX Terminal Workflow Setup (Momentics + VMware + SSH)
 
-1)Creating the QNX C Project:
+---
+
+## 1) Creating the QNX C Project
 
 Inside Momentics:
 
-Login to workspace
-
-Create New → QNX C Project
-
-Select predefined template (e.g., Hello World)
+- Login to workspace  
+- Create **New → QNX C Project**  
+- Select predefined template (e.g., Hello World)
 
 This generates:
 
+```
 .project
-
 .cproject
-
 Makefile
-
 src/Demo.c
+```
 
 These predefined files configure:
 
-Cross compilation toolchain
+- Cross compilation toolchain  
+- Target architecture (x86_64)  
+- Debug build configuration  
+- Output folder structure  
 
-Target architecture (x86_64)
+---
 
-Debug build configuration
-
-Output folder structure
-
-2)Creating the QNX VM with SSH Support:
+## 2) Creating the QNX VM with SSH Support
 
 We created the QNX VMware target using Momentics.
 
@@ -40,33 +38,27 @@ During Target Creation, we added SSH properties under:
 Extra Options
 ```
 
-🔐 SSH Extra Options Used
+### 🔐 SSH Extra Options Used
 
 ```sh
 --ssh-ident=none --sshd-pregen=yes --getip --users=root/root
 ```
 
-🧠 What These Options Do
+### 🧠 What These Options Do
 
-Option	Purpose
-
---ssh-ident=none	Enables SSH without requiring public key file
-
---sshd-pregen=yes	Pre-generates SSH host keys
-
---getip	Enables DHCP networking
-
---users=root/root	Creates root user with password root
+| Option | Purpose |
+|--------|----------|
+| --ssh-ident=none | Enables SSH without requiring public key file |
+| --sshd-pregen=yes | Pre-generates SSH host keys |
+| --getip | Enables DHCP networking |
+| --users=root/root | Creates root user with password root |
 
 This ensures:
 
-SSH server is included in image
-
-Networking works automatically
-
-We can login via SSH from host
-
-VM gets IP address dynamically
+- SSH server is included in image  
+- Networking works automatically  
+- We can login via SSH from host  
+- VM gets IP address dynamically  
 
 After creation, the VM boots and networking is verified using:
 
@@ -76,15 +68,19 @@ ifconfig
 
 Example output:
 
+```
 vmx0:
+```
 
 ```sh
 inet xxx.xxx.xx.xxx
 ```
 
-3)Modifying the Source File:
+---
 
-modified:
+## 3) Modifying the Source File
+
+Modified:
 
 ```
 src/Demo.c
@@ -101,7 +97,9 @@ int main() {
 }
 ```
 
-4)Loading QNX Build Environment (Host):
+---
+
+## 4) Loading QNX Build Environment (Host)
 
 Before building from terminal:
 
@@ -111,13 +109,11 @@ C:\Users\xx\qnx800\env_full.bat
 
 This sets:
 
-QNX toolchain in PATH
+- QNX toolchain in PATH  
+- Cross compiler (qcc)  
+- Debug tools  
 
-Cross compiler (qcc)
-
-Debug tools
-
-env_full.bat:
+### env_full.bat
 
 ```sh
 @echo off
@@ -140,7 +136,9 @@ echo QNX SDP 8 Environment Loaded
 echo.
 ```
 
-5)Building the Project from Terminal:
+---
+
+## 5) Building the Project from Terminal
 
 Navigate to project:
 
@@ -162,11 +160,13 @@ make
 
 Output binary:
 
-```sh
+```
 build\x86_64-debug\Demo
 ```
 
-6)Connecting to VM via SSH:
+---
+
+## 6) Connecting to VM via SSH
 
 Because of crypto compatibility between Windows and QNX, we used:
 
@@ -176,7 +176,9 @@ Password:
 root
 ```
 
-7)Running the Program on VM:
+---
+
+## 7) Running the Program on VM
 
 Inside SSH session:
 
@@ -191,7 +193,9 @@ OR directly from Windows:
 ssh -o MACs=hmac-sha2-256 -o Ciphers=aes128-ctr root@xxx.xxx.xx.xxx /tmp/Demo
 ```
 
-Full Terminal Automation Script:
+---
+
+# Full Terminal Automation Script
 
 ```
 run.bat
